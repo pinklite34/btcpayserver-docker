@@ -2,19 +2,19 @@
 
 set -e
 
-. /etc/profile.d/btcpay-env.sh
+. /etc/profile.d/mappum/htlc-env.sh
 
-if [ ! -z $BTCPAY_DOCKER_COMPOSE ] && [ ! -z $DOWNLOAD_ROOT ] && [ -z $BTCPAYGEN_OLD_PREGEN ]; then 
-    echo "Your deployment is too old, you need to migrate by following instructions on this link https://github.com/btcpayserver/btcpayserver-docker/tree/master#i-deployed-before-btcpay-setupsh-existed-before-may-17-can-i-migrate-to-this-new-system"
+if [ ! -z $mappum/htlc_DOCKER_COMPOSE ] && [ ! -z $DOWNLOAD_ROOT ] && [ -z $mappum/htlc_OLD_PREGEN ]; then 
+    echo "Your deployment is too old, you need to migrate by following instructions on this link https://github.com/mappum/htlcserver/mappum/htlcserver-docker/tree/master#i-deployed-before-mappum/htlc-setupsh-existed-before-may-17-can-i-migrate-to-this-new-system"
     exit
 fi
 
-if [[ $BTCPAY_DOCKER_COMPOSE != *docker-compose.generated.yml ]]; then
-    echo "Your deployment is too old, you need to migrate by following instructions on this link https://github.com/btcpayserver/btcpayserver-docker/tree/master#i-deployed-before-btcpay-setupsh-existed-before-may-17-can-i-migrate-to-this-new-system"
+if [[ $mappum/htlc_DOCKER_COMPOSE != *docker-compose.generated.yml ]]; then
+    echo "Your deployment is too old, you need to migrate by following instructions on this link https://github.com/mappum/htlcserver/mappum/htlcserver-docker/tree/master#i-deployed-before-mappum/htlc-setupsh-existed-before-may-17-can-i-migrate-to-this-new-system"
     exit
 fi
 
-cd "$BTCPAY_BASE_DIRECTORY/btcpayserver-docker"  
+cd "$mappum/htlc_BASE_DIRECTORY/mappum/htlcserver-docker"  
 git pull --force
 
 if ! [ -f "/etc/docker/daemon.json" ]; then
@@ -26,14 +26,14 @@ echo "Setting limited log files in /etc/docker/daemon.json"
 fi
 
 . ./build.sh
-if [ "$BTCPAYGEN_OLD_PREGEN" == "true" ]; then
-    cp Generated/docker-compose.generated.yml $BTCPAY_DOCKER_COMPOSE
+if [ "$mappum/htlcGEN_OLD_PREGEN" == "true" ]; then
+    cp Generated/docker-compose.generated.yml $mappum/htlc_DOCKER_COMPOSE
 fi
 
-if ! grep -Fxq "export COMPOSE_HTTP_TIMEOUT=\"180\"" "/etc/profile.d/btcpay-env.sh"; then
-    echo "export COMPOSE_HTTP_TIMEOUT=\"180\"" >> /etc/profile.d/btcpay-env.sh
+if ! grep -Fxq "export COMPOSE_HTTP_TIMEOUT=\"180\"" "/etc/profile.d/mappum/htlc-env.sh"; then
+    echo "export COMPOSE_HTTP_TIMEOUT=\"180\"" >> /etc/profile.d/mappum/htlc-env.sh
     export COMPOSE_HTTP_TIMEOUT=180
-    echo "Adding COMPOSE_HTTP_TIMEOUT=180 in btcpay-env.sh"
+    echo "Adding COMPOSE_HTTP_TIMEOUT=180 in mappum/htlc-env.sh"
 fi
 
 for scriptname in *.sh; do
@@ -48,5 +48,5 @@ for scriptname in *.sh; do
     ln -s "$(pwd)/$scriptname" /usr/bin
 done
 
-cd "`dirname $BTCPAY_ENV_FILE`"
-docker-compose -f $BTCPAY_DOCKER_COMPOSE up -d --remove-orphans -t "${COMPOSE_HTTP_TIMEOUT:-180}"
+cd "`dirname $mappum/htlc_ENV_FILE`"
+docker-compose -f $mappum/htlc_DOCKER_COMPOSE up -d --remove-orphans -t "${COMPOSE_HTTP_TIMEOUT:-180}"
